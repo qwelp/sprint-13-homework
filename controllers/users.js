@@ -4,8 +4,8 @@ const User = require('../models/user');
 module.exports.getUser = (req, res) => {
   const { userId } = req.params;
 
-  User.findById(userId, function (err, user) {
-    if(!user) {
+  User.findById(userId, (err, user) => {
+    if (!user) {
       res.status(404).send({ data: 'Пользователь не существует' });
     } else {
       res.status(200).send({ data: user });
