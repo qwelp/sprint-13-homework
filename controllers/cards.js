@@ -30,25 +30,35 @@ module.exports.createCard = (req, res) => {
 module.exports.deleteCard = (req, res) => {
   const { cardId } = req.params;
 
-  Card.deleteOne({ _id: cardId })
-    .then((card) => res.send({ data: card }))
-    .catch((err) => res.status(400).send({ message: err.message }));
+  Card.findById(cardId, function (err, card) {
+    if(!card) {
+      res.status(404).send({ data: 'Карточки не существует' });
+    } else {
+      Card.deleteOne({ _id: cardId })
+        .then((card) => res.send({ data: card }))
+        .catch((err) => res.status(400).send({ message: err.message }));
+    }
+  });
 };
 
 // PUT поставить лайк карточке
 module.exports.likeCard = (req, res) => {
-  Card.findByIdAndUpdate(req.params.cardId,
-    { $addToSet: { likes: req.user._id } },
-    { new: true })
-    .then((card) => res.send({ data: card }))
-    .catch((err) => res.status(400).send({ message: err.message }));
+  Card.findByIdAndUpdate(req.params.cardId, { $addToSet: { likes: req.user._id } }, { new: true }, function (err, card) {
+    if(!card) {
+      res.status(404).send({ data: 'Карточки не существует' });
+    } else {
+      res.status(200).send({ data: card });
+    }
+  });
 };
 
 // DELETE убрать лайк с карточки
 module.exports.dislikeCard = (req, res) => {
-  Card.findByIdAndUpdate(req.params.cardId,
-    { $pull: { likes: req.user._id } },
-    { new: true })
-    .then((card) => res.send({ data: card }))
-    .catch((err) => res.status(400).send({ message: err.message }));
+  Card.findByIdAndUpdate(req.params.cardId, { $pull: { likes: req.user._id } }, { new: true }, function (err, card) {
+    if(!card) {
+      res.status(404).send({ data: 'Карточки не существует' });
+    } else {
+      res.status(200).send({ data: card });
+    }
+  });
 };

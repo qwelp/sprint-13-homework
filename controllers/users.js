@@ -4,9 +4,13 @@ const User = require('../models/user');
 module.exports.getUser = (req, res) => {
   const { userId } = req.params;
 
-  User.findById(userId)
-    .then((user) => res.send({ data: user }))
-    .catch((err) => res.status(400).send({ message: err.message }));
+  User.findById(userId, function (err, user) {
+    if(!user) {
+      res.status(404).send({ data: 'Пользователь не существует' });
+    } else {
+      res.status(200).send({ data: user });
+    }
+  });
 };
 
 // GET Получить всех пользователей
@@ -40,30 +44,25 @@ module.exports.deleteUser = (req, res) => {
 module.exports.updateUser = (req, res) => {
   const {
     name,
-    about,
-    avatar
+    about
   } = req.body;
   const owner = req.user._id;
   const data = {};
 
   if (name) {
-    data[name] = name;
+    data.name = name;
   }
 
   if (about) {
-    data[about] = about;
-  }
-
-  if (avatar) {
-    data[avatar] = avatar;
+    data.about = about;
   }
 
   if (Object.keys(data).length) {
-    User.updateOne({ _id: owner }, { $set: data })
+    User.updateOne({ _id: owner }, data, { runValidators: true })
       .then((user) => res.send({ data: user }))
       .catch((err) => res.status(400).send({ message: err.message }));
   } else {
-    res.status(404).send({ message: 'Ошибка' });
+    res.status(404).send({ message: 'name или about не могут быть пустыми' });
   }
 };
 

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 function validator(v) {
-  return /(ftp|http|https):\/\/(\w+:{0,1}\w*#)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%#!\-/]))?/.test(v);
+  return /((http|https):\/\/)?(www.)?([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}|[a-z0-9-]+\.[a-z]+[a-z]+?)(:(?!0{1,5})[0-9]{2,5})?([a-z/]+)?#?/.test(v);
 }
 
 const cardSchema = new mongoose.Schema({
