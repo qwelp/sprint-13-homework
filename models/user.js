@@ -1,8 +1,5 @@
+const validator = require('validator');
 const mongoose = require('mongoose');
-
-function validator(v) {
-  return /((http|https):\/\/)?(www.)?([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}|[a-z0-9-]+\.[a-z]+[a-z]+?)(:(?!0{1,5})[0-9]{2,5})?([a-z/]+)?#?/.test(v);
-}
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -19,7 +16,7 @@ const userSchema = new mongoose.Schema({
   },
   avatar: {
     type: String,
-    validate: validator,
+    validate: validator.isURL,
     required: [true, 'Ссылка не валидна!']
   }
 });

@@ -17,7 +17,7 @@ module.exports.getUser = (req, res) => {
 module.exports.getUsers = (req, res) => {
   User.find({})
     .then((user) => res.send({ data: user }))
-    .catch((err) => res.status(400).send({ message: err.message }));
+    .catch((err) => res.status(500).send({ message: err.message }));
 };
 
 // POST Добавить пользователя
@@ -26,44 +26,20 @@ module.exports.createUser = (req, res) => {
 
   User.create({ name, about, avatar })
     .then((user) => res.send({ data: user }))
-    .catch((err) => res.status(400).send({ message: err.message }));
-};
-
-// DELETE Удалить пользователя
-module.exports.deleteUser = (req, res) => {
-  const {
-    userId
-  } = req.params;
-
-  User.deleteOne({ _id: userId })
-    .then((user) => res.send({ data: user }))
-    .catch((err) => res.status(400).send({ message: err.message }));
+    .catch((err) => res.status(500).send({ message: err.message }));
 };
 
 // PATCH обновляет профиль
 module.exports.updateUser = (req, res) => {
   const {
-    name,
-    about
+    name: namePatch,
+    about: aboutPatch
   } = req.body;
   const owner = req.user._id;
-  const data = {};
 
-  if (name) {
-    data.name = name;
-  }
-
-  if (about) {
-    data.about = about;
-  }
-
-  if (Object.keys(data).length) {
-    User.updateOne({ _id: owner }, data, { runValidators: true })
-      .then((user) => res.send({ data: user }))
-      .catch((err) => res.status(400).send({ message: err.message }));
-  } else {
-    res.status(404).send({ message: 'name или about не могут быть пустыми' });
-  }
+  User.updateOne({ _id: owner }, { name: namePatch, about: aboutPatch }, { runValidators: true })
+    .then((user) => res.send({ data: user }))
+    .catch((err) => res.status(500).send({ message: err.message }));
 };
 
 // PATCH обновляет аватар
@@ -73,7 +49,7 @@ module.exports.updateAvatarUser = (req, res) => {
   } = req.body;
   const owner = req.user._id;
 
-  User.updateOne({ _id: owner }, { $set: { avatar: avatarPost } })
+  User.updateOne({ _id: owner }, { $set: { avatar: avatarPost } }, { runValidators: true })
     .then((user) => res.send({ data: user }))
-    .catch((err) => res.status(400).send({ message: err.message }));
+    .catch((err) => res.status(500).send({ message: err.message }));
 };

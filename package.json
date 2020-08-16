@@ -1,6 +1,6 @@
 {
   "name": "sprint-13-homework",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "homepage": "https://qwelp.github.io/sprint-homework-13/",
   "description": "Проектная работа 13",
   "main": "app.js",
@@ -13,7 +13,8 @@
   "dependencies": {
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
-    "mongoose": "^5.9.29"
+    "mongoose": "^5.9.29",
+    "validator": "^13.1.1"
   },
   "devDependencies": {
     "eslint": "^7.6.0",
