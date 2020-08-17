@@ -14,7 +14,7 @@ module.exports.createCard = (req, res) => {
 
   Card.create({ name, link, owner })
     .then((card) => res.send({ data: card }))
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .catch((err) => res.status(400).send({ message: err.message }));
 };
 
 // DELETE Удалить карточку
@@ -39,8 +39,14 @@ module.exports.likeCard = (req, res) => {
     { $addToSet: { likes: req.user._id } },
     { new: true }
   )
-    .then((card) => res.status(200).send({ data: card }))
-    .catch((err) => res.status(404).send({ data: `Карточки не существует ${err.message}` }));
+    .then((card) => {
+      if (card === null) {
+        res.status(400).send({ data: 'Не правильный _id карточки' });
+      } else {
+        res.status(200).send({ data: card });
+      }
+    })
+    .catch((err) => res.status(400).send({ data: `Не правильный _id карточки ${err.message}` }));
 };
 
 // DELETE убрать лайк с карточки
@@ -49,6 +55,12 @@ module.exports.dislikeCard = (req, res) => {
     req.params.cardId,
     { $pull: { likes: req.user._id } }, { new: true }
   )
-    .then((card) => res.status(200).send({ data: card }))
-    .catch((err) => res.status(404).send({ data: `Карточки не существует ${err.message}` }));
+    .then((card) => {
+      if (card === null) {
+        res.status(400).send({ data: 'Не правильный _id карточки' });
+      } else {
+        res.status(200).send({ data: card });
+      }
+    })
+    .catch((err) => res.status(400).send({ data: `Не правильный _id карточки ${err.message}` }));
 };

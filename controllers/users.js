@@ -26,7 +26,7 @@ module.exports.createUser = (req, res) => {
 
   User.create({ name, about, avatar })
     .then((user) => res.send({ data: user }))
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .catch((err) => res.status(400).send({ message: err.message }));
 };
 
 // PATCH обновляет профиль
@@ -39,7 +39,7 @@ module.exports.updateUser = (req, res) => {
 
   User.updateOne({ _id: owner }, { name: namePatch, about: aboutPatch }, { runValidators: true })
     .then((user) => res.send({ data: user }))
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .catch((err) => res.status(400).send({ message: err.message }));
 };
 
 // PATCH обновляет аватар
@@ -51,5 +51,5 @@ module.exports.updateAvatarUser = (req, res) => {
 
   User.updateOne({ _id: owner }, { $set: { avatar: avatarPost } }, { runValidators: true })
     .then((user) => res.send({ data: user }))
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .catch((err) => res.status(400).send({ message: err.message }));
 };
